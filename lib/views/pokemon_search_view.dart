@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class PokemonSearchView extends StatelessWidget {
+import './pokemon_details_view.dart';
+import '../providers/pokemon.dart';
+import '../providers/pokemon_list.dart';
+
+class PokemonSearchView extends StatefulWidget {
   static const routeName = '/pokemon-search';
 
-  static const List<String> _kOptions = <String>[
-    'Bulbasaur',
-    'Tortoise',
-    'Raticate',
-  ];
+  @override
+  _PokemonSearchViewState createState() => _PokemonSearchViewState();
+}
+
+class _PokemonSearchViewState extends State<PokemonSearchView> {
+  var _isFirstRun = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isFirstRun) {
+      print('didChangeDependencies');
+      Provider.of<PokemonList>(context).fetchPokemonNames().then((value) => print('success')).catchError((error) => print(error));
+      _isFirstRun = false;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Pokemon> _pokemons = Provider.of<PokemonList>(context).pokemons;
+    final List<String> _kNames = _pokemons.map((e) => e.name).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokedex'),
@@ -30,9 +49,9 @@ class PokemonSearchView extends StatelessWidget {
                   if (value.text == '') {
                     return const Iterable<String>.empty();
                   }
-                  return _kOptions.where((element) => element.contains(value.text.toLowerCase()));
+                  return _kNames.where((element) => element.contains(value.text.toLowerCase()));
                 },
-                onSelected: (selected) => print(selected),
+                onSelected: (selected) => Navigator.of(context).pushNamed(PokemonDetailsView.routeName)
               ),
             ],
           ),
