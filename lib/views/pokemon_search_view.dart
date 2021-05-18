@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import '../services/pokemon_api.dart';
 import './pokemon_details_view.dart';
-import '../providers/pokemon.dart';
-import '../providers/pokemon_list.dart';
 
 class PokemonSearchView extends StatefulWidget {
   static const routeName = '/pokemon-search';
@@ -13,23 +11,25 @@ class PokemonSearchView extends StatefulWidget {
 }
 
 class _PokemonSearchViewState extends State<PokemonSearchView> {
-  var _isFirstRun = true;
-
+  PokemonApi api = PokemonApi();
+  var _isLoading = false;
+  var _kNames = [];
+  
   @override
-  void didChangeDependencies() {
-    if (_isFirstRun) {
-      print('didChangeDependencies');
-      Provider.of<PokemonList>(context).fetchPokemonNames().then((value) => print('success')).catchError((error) => print(error));
-      _isFirstRun = false;
-    }
-    super.didChangeDependencies();
+  void initState() {
+    _isLoading = true;
+    Future.delayed(Duration.zero, () async {
+      var names = await api.fetchPokemonNames();
+      setState(() {
+        _kNames = names;
+        _isLoading = false;
+      });
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Pokemon> _pokemons = Provider.of<PokemonList>(context).pokemons;
-    final List<String> _kNames = _pokemons.map((e) => e.name).toList();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pokedex'),
@@ -51,7 +51,7 @@ class _PokemonSearchViewState extends State<PokemonSearchView> {
                   }
                   return _kNames.where((element) => element.contains(value.text.toLowerCase()));
                 },
-                onSelected: (selected) => Navigator.of(context).pushNamed(PokemonDetailsView.routeName)
+                onSelected: (selected) => Navigator.of(context).pushNamed(PokemonDetailsView.routeName, arguments: selected)
               ),
             ],
           ),
