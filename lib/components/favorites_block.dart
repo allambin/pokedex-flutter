@@ -16,7 +16,9 @@ class FavoritesBlock extends StatelessWidget {
             Column(
               children: [
                 PokemonCard(),
+                SizedBox(height: 40,),
                 PokemonCard(),
+                SizedBox(height: 40,),
                 PokemonCard(),
               ],
             ),
