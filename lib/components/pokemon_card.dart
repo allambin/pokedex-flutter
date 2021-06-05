@@ -15,11 +15,11 @@ class PokemonCard extends StatelessWidget {
               ),
               elevation: 2,
               color: Color(0xffF2CB55),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Stack(
-                  children: [
-                    Column(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('#025', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
@@ -33,34 +33,35 @@ class PokemonCard extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 5),
                               child: PokemonCardType(),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: PokemonCardType(),
+                            ),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              )
+                  ),
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Image(
+                      image: AssetImage('assets/images/pokeball.png'),
+                      height: 150,
+                      color: const Color.fromRGBO(255, 255, 255, 0.15),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
         Positioned(
-          right: 30,
-          bottom: 5,
-          child: Container(
-              child: Image(
-              image: AssetImage('assets/images/pokeball.png'),
-              color: const Color.fromRGBO(255, 255, 255, 0.2),
-              fit: BoxFit.cover,
-              height: 100,
-            ),
-          ),
-        ),
-        Positioned(
-          right: 0,
-          top: -40,
+          right: 10,
+          top: -20,
           child: Image(
             image: AssetImage('assets/images/25.png'),
-            height: 150,
+            height: 130,
           ),
         ),
       ],

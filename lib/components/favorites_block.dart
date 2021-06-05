@@ -8,7 +8,7 @@ class FavoritesBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -16,9 +16,9 @@ class FavoritesBlock extends StatelessWidget {
             Column(
               children: [
                 PokemonCard(),
-                SizedBox(height: 40,),
+                SizedBox(height: 20,),
                 PokemonCard(),
-                SizedBox(height: 40,),
+                SizedBox(height: 20,),
                 PokemonCard(),
               ],
             ),
