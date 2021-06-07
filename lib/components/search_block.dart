@@ -7,16 +7,16 @@ class SearchBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Pokedex', style: ThemeText.header,),
-            Text('Search for a Pokemon by name', style: ThemeText.subTitle,),
-            SearchBar(),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Pokedex', style: ThemeText.header,),
+          Text('Search for a Pokemon by name', style: ThemeText.subTitle,),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: SearchBar(),
+          ),
+        ],
       ),
     );
   }
