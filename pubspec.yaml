@@ -53,6 +53,7 @@ flutter:
     - assets/images/pokeball.png
     - assets/images/grass.png
     - assets/images/poison.png
+    - assets/images/kanto.png
     - assets/images/electric.webp
   #   - images/a_dot_ham.jpeg
 
