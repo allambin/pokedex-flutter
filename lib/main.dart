@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './views/generation_view.dart';
 import './views/home_view.dart';
 import './views/pokemon_details_view.dart';
 // import './views/pokemon_search_view.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget{
       ),
       home: HomeView(),
       routes: {
-        PokemonDetailsView.routeName: (ctx) => PokemonDetailsView()
+        PokemonDetailsView.routeName: (ctx) => PokemonDetailsView(),
+        GenerationView.routeName: (ctx) => GenerationView(),
       },
     );
   }
