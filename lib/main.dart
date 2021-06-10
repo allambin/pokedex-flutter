@@ -13,6 +13,16 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pokedex',
+      theme: ThemeData(
+        textTheme: ThemeData.light().textTheme.copyWith(
+          bodyText2: TextStyle(
+            fontSize: 20,
+          ),
+          headline6: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       home: HomeView(),
       routes: {
         PokemonDetailsView.routeName: (ctx) => PokemonDetailsView()
