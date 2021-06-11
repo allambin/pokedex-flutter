@@ -31,6 +31,7 @@ dependencies:
   http: ^0.13.3
   provider: ^5.0.0
   percent_indicator: "^2.1.7+2"
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +57,24 @@ flutter:
     - assets/images/poison.png
     - assets/images/kanto.png
     - assets/images/electric.webp
+    - assets/images/types/bug.svg
+    - assets/images/types/dark.svg
+    - assets/images/types/dragon.svg
+    - assets/images/types/electric.svg
+    - assets/images/types/fairy.svg
+    - assets/images/types/fighting.svg
+    - assets/images/types/fire.svg
+    - assets/images/types/flying.svg
+    - assets/images/types/ghost.svg
+    - assets/images/types/grass.svg
+    - assets/images/types/ground.svg
+    - assets/images/types/ice.svg
+    - assets/images/types/normal.svg
+    - assets/images/types/poison.svg
+    - assets/images/types/psychic.svg
+    - assets/images/types/rock.svg
+    - assets/images/types/steel.svg
+    - assets/images/types/water.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

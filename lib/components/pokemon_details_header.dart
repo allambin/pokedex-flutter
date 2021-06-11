@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../utils/string_extension.dart';
+import '../models/pokemon.dart';
+
 class PokemonDetailsHeader extends StatelessWidget {
+  final Pokemon _pokemon;
+
+  const PokemonDetailsHeader(this._pokemon);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,18 +26,20 @@ class PokemonDetailsHeader extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text('Pikachu', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),),
+                          Text(_pokemon.name.capitalize(), style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),),
                           Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: Image(image: AssetImage('assets/images/electric.webp'), height: 30, width: 30,),
+                            child: Row(
+                              children: _pokemon.types.map((e) => e.icon).toList(),
+                            ),
                           ),
                         ],
                       ),
-                      Text('#025', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+                      Text('#${_pokemon.number}', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
-                Text('Mouse Pokémon', style: TextStyle(color: Colors.white, fontSize: 16),),
+                Text(_pokemon.genus, style: TextStyle(color: Colors.white, fontSize: 16),),
               ],
             ),
           ),
@@ -49,7 +58,9 @@ class PokemonDetailsHeader extends StatelessWidget {
           Positioned.fill(
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Text('PIKACHU', overflow: TextOverflow.visible, style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Color.fromRGBO(255, 255, 255, 0.1)),),
+              child: FittedBox(
+                child: Text(_pokemon.name.toUpperCase(), style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Color.fromRGBO(255, 255, 255, 0.1)),)
+              ),
             ),
           ),
         ],

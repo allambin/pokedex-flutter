@@ -24,11 +24,19 @@ class MyApp extends StatelessWidget{
           ),
         ),
       ),
-      home: HomeView(),
-      routes: {
-        PokemonDetailsView.routeName: (ctx) => PokemonDetailsView(),
-        GenerationView.routeName: (ctx) => GenerationView(),
+      onGenerateRoute: (RouteSettings settings) {
+        var routes = <String, WidgetBuilder>{
+          PokemonDetailsView.routeName: (ctx) => PokemonDetailsView(settings.arguments),
+          GenerationView.routeName: (ctx) => GenerationView(),
+        };
+        WidgetBuilder builder = routes[settings.name];
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
       },
+      home: HomeView(),
+      // routes: {
+      //   PokemonDetailsView.routeName: (ctx) => PokemonDetailsView(),
+      //   GenerationView.routeName: (ctx) => GenerationView(),
+      // },
     );
   }
 }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../models/pokemon.dart';
 import '../components/pokemon_details_moves.dart';
 import '../components/pokemon_details_stats.dart';
 import '../components/pokemon_details_about.dart';
 import '../theme/styles.dart';
 
 class PokemonDetailsBody extends StatefulWidget {
+  final Pokemon pokemon;
+
+  const PokemonDetailsBody(this.pokemon);
+
   @override
   _PokemonDetailsBodyState createState() => _PokemonDetailsBodyState();
 }
@@ -57,11 +62,11 @@ class _PokemonDetailsBodyState extends State<PokemonDetailsBody> with TickerProv
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: PokemonDetailsAbout(),
+                        child: PokemonDetailsAbout(widget.pokemon),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: PokemonDetailsStats(),
+                        child: PokemonDetailsStats(widget.pokemon),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
@@ -79,10 +84,11 @@ class _PokemonDetailsBodyState extends State<PokemonDetailsBody> with TickerProv
           top: -220,
           child: Align(
             alignment: Alignment.topCenter,
-            child: Image(
-              image: AssetImage('assets/images/25.png'),
-              height: 270,
-            ),
+            child: Image.network(widget.pokemon.artworkUrl, width: 270,)
+            // child: Image(
+            //   image: AssetImage('assets/images/25.png'),
+            //   height: 270,
+            // ),
           ),
         ),
       ],
