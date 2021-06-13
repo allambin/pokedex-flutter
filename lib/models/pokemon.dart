@@ -44,6 +44,7 @@ class Pokemon {
     return this.id.toString();
   }
 
+  // todo rename to specify we get icons
   List<SvgPicture> get weaknesses {
     List<SvgPicture> icons = [];
     this.types.forEach((type) {
@@ -53,6 +54,39 @@ class Pokemon {
     });
 
     return icons;
+  }
+
+  Map<String, double> get typeChart {
+    Map<String, double> typeChart = Map.fromEntries(Type.listOfTypes().map((value) {
+      return MapEntry(value, 1);
+    }));
+    this.types.forEach((type) {
+      type.damageRelations.forEach((key, typeNames) {
+        double damage = 1;
+        switch (key) {
+          case 'double_damage_from':
+            damage = 2;
+            break;
+          case 'half_damage_from':
+            damage = .5;
+            break;
+          case 'no_damage_from':
+            damage = 0;
+            break;
+          default:
+        }
+
+        typeNames.forEach((typeName) {
+          if (typeChart.containsKey(typeName)) {
+            typeChart[typeName] = typeChart[typeName] * damage;
+          } else {
+            typeChart[typeName] = damage;
+          }
+        });
+      });
+    });
+
+    return typeChart;
   }
 
   Map<String, int> get displayStats {
@@ -93,12 +127,8 @@ class Pokemon {
     Iterable statsFromJson = json['stats'];
     Map<String, int> stats = {};
     statsFromJson.forEach((element) {
-      print('element');
-      print(element);
       stats[element['stat']['name']] = element['base_stat'];
-      print(stats);
     });
-    print(stats);
 
     Iterable generaFromJson = json['genera'];
     var genera = generaFromJson.where((element) => element['language']['name'] == 'en').first;
