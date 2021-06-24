@@ -1,9 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:numerus/numerus.dart';
+import 'package:pokedex/components/pokemon_moves_table.dart';
 
-class PokemonDetailsMoves extends StatelessWidget {
+import '../models/pokemon_move.dart';
+import '../models/pokemon.dart';
+import '../services/move_api.dart';
+
+class PokemonDetailsMoves extends StatefulWidget {
+  final Pokemon pokemon;
+
+  const PokemonDetailsMoves(this.pokemon);
+
+  @override
+  _PokemonDetailsMovesState createState() => _PokemonDetailsMovesState();
+}
+
+class _PokemonDetailsMovesState extends State<PokemonDetailsMoves> {
+  final MoveApi api = MoveApi();
+  var _currentGenerationNumber = 1;
+  var _isLoading = false;
+  Future<List<PokemonMove>> _displayedMoves;
+
+  @override
+  void initState() {
+    super.initState();
+    var pkmnMoves = widget.pokemon.getLevelUpMoves(_currentGenerationNumber);
+    _displayedMoves = api.fillUpMoves(pkmnMoves);
+  }
+
+  void changeGeneration(int index) {
+    setState(() {
+      _currentGenerationNumber = index;
+      var pkmnMoves = widget.pokemon.getLevelUpMoves(_currentGenerationNumber);
+      _displayedMoves = api.fillUpMoves(pkmnMoves);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return _isLoading ? CircularProgressIndicator() : SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -13,78 +48,27 @@ class PokemonDetailsMoves extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: new List.generate(8, (index) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.grey[200],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: Center(child: Text('I')),
-                ),
-              )),
+            children: new List.generate(8, (index) {
+              return InputChip(
+                selected: _currentGenerationNumber == index + 1,
+                label: Text((index+1).toRomanNumeralString()),
+                onSelected: (bool value) {
+                  changeGeneration(index + 1);
+                },
+              );
+            }),
           ),
-          Table(
-            children: [
-              TableRow(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.grey[200],
-                ),
-                children: [
-                  TableCell(child: Text('Lvl'),),
-                  TableCell(child: Text('Move'),),
-                  TableCell(child: Text('Type'),),
-                  TableCell(child: Text('Cat.'),),
-                  TableCell(child: Text('Pwr.'),),
-                  TableCell(child: Text('Acc.'),),
-                  TableCell(child: Text('PP'),),
-                ],
-              ),
-              TableRow(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Colors.grey[200],
-                ),
-                children: [
-                  TableCell(child: Text('1', style: TextStyle(fontSize: 14),),),
-                  TableCell(child: Text('Play Nice', style: TextStyle(fontSize: 14)),),
-                  TableCell(child: Container(
-                    child: Text('Normal', style: TextStyle(fontSize: 14)),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.yellow,
-                    ),
-                  ),),
-                  TableCell(child: Text('Status', style: TextStyle(fontSize: 14)),),
-                  TableCell(child: Text('-', style: TextStyle(fontSize: 14)),),
-                  TableCell(child: Text('-', style: TextStyle(fontSize: 14)),),
-                  TableCell(child: Text('20', style: TextStyle(fontSize: 14)),),
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(child: Text('1'),),
-                  TableCell(child: Text('Nuzzle'),),
-                  TableCell(child: Text('Electric'),),
-                  TableCell(child: Text('Physical'),),
-                  TableCell(child: Text('20'),),
-                  TableCell(child: Text('100%'),),
-                  TableCell(child: Text('20'),),
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(child: Text('1'),),
-                  TableCell(child: Text('Thunder Shock'),),
-                  TableCell(child: Text('Electric'),),
-                  TableCell(child: Text('Special'),),
-                  TableCell(child: Text('20'),),
-                  TableCell(child: Text('100%'),),
-                  TableCell(child: Text('20'),),
-                ],
-              ),
-            ],
+          FutureBuilder<List<PokemonMove>>(
+            future: _displayedMoves,
+            builder: (context, snapshot) {
+              if(snapshot.connectionState != ConnectionState.done) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+
+              return PokemonMovesTable(snapshot.data);
+            },
           ),
         ],
       ),

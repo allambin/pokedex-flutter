@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
-import 'package:pokedex/services/pokemon_type_api.dart';
 
+import '../services/pokemon_type_api.dart';
 import '../models/pokemon.dart';
 import '../models/type.dart';
 
@@ -39,32 +40,24 @@ class PokemonApi {
     Pokemon pokemon = Pokemon.fromJson(body);
     pokemon.types = types;
     return pokemon;
-
-    // typesFromJson.forEach((name) async {
-    //   var type = await typeApi.fetchType(e['type']['name']);
-    // });
-
-    // return Pokemon.fromJson(body);
-
-    // List<Type> types = [];
-    // Iterable extractedTypes = extractedData['types'];
-    // extractedTypes.forEach((element) {
-    //   Type type = Type(element['type']['name']);
-    //   types.add(type);
-    // });
   }
 
   Future<List<String>> fetchPokemonNames() async {
-    print('fetch pokemon names');
-    var url = Uri.https(domain, '/api/v2/pokemon');
-    List<String> names = [];
+    try {
+      print('fetch pokemon names');
+      var url = Uri.https(domain, '/api/v2/pokemon');
+      List<String> names = [];
 
-    String next;
-    do {
-      var response = await http.get(url);
+      String next;
+      do {
+        // var response = await http.get(url);
+        var file = await DefaultCacheManager().getSingleFile(url.toString());
+        final contents = await file.readAsString();
+        // print(contents);
 
-      if (response.statusCode == 200) {
-        final extractedData = json.decode(response.body) as Map<String, dynamic>;
+        // if (response.statusCode == 200) {
+        final extractedData = json.decode(contents);
+        // final extractedData = json.decode(response.body) as Map<String, dynamic>;
         next = extractedData['next'];
         if (next != null) {
           url = Uri.parse(extractedData['next']);
@@ -72,14 +65,18 @@ class PokemonApi {
         Iterable items = extractedData['results'];
         // print(items);
         items.forEach((element) {
-          print(element['name']);
+          // print(element['name']);
           names.add(element['name']);
         });
-      } else {
-        throw Exception('Failed to load names');
-      }
-    } while (next != null && names.length < 10);
-    
-    return names;
+        // } else {
+        //   throw Exception('Failed to load names');
+        // }
+      } while (next != null);
+      
+      return names;
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to load names');
+    }
   }
 }

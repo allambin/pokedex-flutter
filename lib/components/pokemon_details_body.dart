@@ -70,7 +70,7 @@ class _PokemonDetailsBodyState extends State<PokemonDetailsBody> with TickerProv
                       ),
                       Padding(
                         padding: const EdgeInsets.all(20),
-                        child: PokemonDetailsMoves(),
+                        child: PokemonDetailsMoves(widget.pokemon),
                       ),
                       Text('Evolutions'),
                     ],
@@ -85,10 +85,6 @@ class _PokemonDetailsBodyState extends State<PokemonDetailsBody> with TickerProv
           child: Align(
             alignment: Alignment.topCenter,
             child: Image.network(widget.pokemon.artworkUrl, width: 270,)
-            // child: Image(
-            //   image: AssetImage('assets/images/25.png'),
-            //   height: 270,
-            // ),
           ),
         ),
       ],

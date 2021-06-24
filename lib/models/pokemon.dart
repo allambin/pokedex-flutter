@@ -3,8 +3,11 @@ import 'dart:core';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import './move.dart';
+import './pokemon_move.dart';
 import './ability.dart';
 import './type.dart';
+import './generation.dart';
 
 class Pokemon {
   final String name;
@@ -18,6 +21,7 @@ class Pokemon {
   List<Type> types;
   final List<Ability> abilities;
   final Map<String, int> stats;
+  List<PokemonMove> moves;
 
   Pokemon({
     @required this.name,
@@ -31,6 +35,7 @@ class Pokemon {
     this.description,
     this.abilities,
     this.stats,
+    this.moves,
   });
 
   String get number {
@@ -117,11 +122,33 @@ class Pokemon {
     return newStats;
   }
 
+  List<PokemonMove> getLevelUpMoves(int generation) {
+    List<PokemonMove> moves = this.moves
+    .where((element) => element.learningMethod == LearningMethod.levelUp)
+    .where((element) => Generation.getSlugs(generation).contains(element.version))
+    .toList();
+    moves.sort((a, b) => a.levelLearnedAt.compareTo(b.levelLearnedAt));
+    final names = moves.map((e) => e.move.name).toSet();
+    moves.retainWhere((element) => names.remove(element.move.name));
+    return moves;
+  }
+
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic> spritesFromJson = json['sprites'];
-    
+
+    List<PokemonMove> pkmnMoves = [];
+    Iterable movesFromJson = json['moves'];
+    movesFromJson.forEach((m) {
+      Iterable moveVersionsFromJson = m['version_group_details'];
+      Move move = new Move(name: m['move']['name']);
+      moveVersionsFromJson.forEach((element) {
+        PokemonMove pkmnMove = PokemonMove.fromJson(move, element);
+        pkmnMoves.add(pkmnMove);
+      });
+    });
+
     Iterable abilitiesFromJson = json['abilities'];
-    List<Ability> abilities = List<Ability>.from(abilitiesFromJson.map((model)=> Ability.fromJson(model)));
+    List<Ability> abilities = List<Ability>.from(abilitiesFromJson.map((model) => Ability.fromJson(model)));
     abilities.sort((a, b) => a.order.compareTo(b.order));
     
     Iterable statsFromJson = json['stats'];
@@ -134,7 +161,7 @@ class Pokemon {
     var genera = generaFromJson.where((element) => element['language']['name'] == 'en').first;
 
     Iterable descriptionsFromJson = json['flavor_text_entries'];
-    var description = descriptionsFromJson.where((element) => element['language']['name'] == 'en' && element['version']['name'] == 'lets-go-pikachu').first;
+    var description = descriptionsFromJson.firstWhere((element) => element['language']['name'] == 'en');
     
     return Pokemon(
       name: json['name'],
@@ -146,6 +173,7 @@ class Pokemon {
       description: description['flavor_text'],
       abilities: abilities,
       stats: stats,
+      moves: pkmnMoves,
     );
   }
 }

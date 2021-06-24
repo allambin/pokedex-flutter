@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/type.dart';
 
+//todo rename TypeApi
 class PokemonTypeApi {
   final String domain = 'pokeapi.co';
 
